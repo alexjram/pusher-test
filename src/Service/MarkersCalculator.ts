@@ -75,13 +75,13 @@ export default class MarkersCalculator {
     }
 
     findIntersection(lat1: number, lng1: number, angle1: number, lat2: number, lng2: number, angle2: number): Coordinate {
-        if (angle1 === Math.PI) {
+        if (angle1 % Math.PI === 0) {
             return {
                 latitude: lat2,
                 longitude: lng1
             }
         }
-        if (angle2 === Math.PI) {
+        if (angle2 % Math.PI === 0) {
             return {
                 latitude: lat1,
                 longitude: lng2
