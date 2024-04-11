@@ -24,18 +24,21 @@ export default class MarkersCalculator {
     createCorridor(coords: Coordinate[], width: number) {
         const coordinatesWithAngle: CoordWithAngle[] = coords.map((coor, index) => {
             let angle = 0
+            let slope = 0
             if (index < coords.length -1) {
                 const next = coords[index + 1]
                 angle = Math.atan2(next.longitude - coor.longitude, next.latitude - coor.latitude)
-
+                slope =(next.latitude - coor.latitude) / (next.longitude - coor.longitude) 
             } else {
                 const prev = coords[index - 1]
                 angle = Math.atan2(coor.longitude - prev.longitude, coor.latitude - prev.latitude)
+                slope = (coor.latitude - prev.latitude) / (coor.longitude - prev.longitude) 
             }
             return {
                 latitude: coor.latitude,
                 longitude: coor.longitude,
-                angle: angle
+                angle: angle,
+                slope: slope
             }
         });
         
@@ -45,7 +48,6 @@ export default class MarkersCalculator {
         const bottomIntercept: Coordinate[] = []
 
         coordinatesWithAngle.forEach((coor, index) => {
-            //if (index === coordinatesWithAngle.length -1) return;
 
             let coordTop = this.calculateDistancePoints(coor, width / 2, coor.angle - Math.PI/2)
             let coordBottom = this.calculateDistancePoints(coor, width/2, coor.angle + Math.PI/2)
@@ -61,9 +63,10 @@ export default class MarkersCalculator {
             const prevTop = topIntercept[index -1]
             const prevBottom = bottomIntercept[index -1]
             const prevAngle = coordinatesWithAngle[index -1].angle
+            const prevSlope = coordinatesWithAngle[index -1].slope
 
-            topIntercept.push(this.findIntersection(prevTop.latitude, prevTop.longitude, prevAngle, coordTop.latitude, coordTop.longitude, coor.angle))
-            bottomIntercept.push(this.findIntersection(prevBottom.latitude, prevBottom.longitude, prevAngle, coordBottom.latitude, coordBottom.longitude, coor.angle))
+            topIntercept.push(this.findIntersection(prevTop.latitude, prevTop.longitude, prevAngle, prevSlope, coordTop.latitude, coordTop.longitude, coor.angle, coor.slope))
+            bottomIntercept.push(this.findIntersection(prevBottom.latitude, prevBottom.longitude, prevAngle, prevSlope, coordBottom.latitude, coordBottom.longitude, coor.angle, coor.slope))
         })
 
         return {
@@ -74,7 +77,7 @@ export default class MarkersCalculator {
         }
     }
 
-    findIntersection(lat1: number, lng1: number, angle1: number, lat2: number, lng2: number, angle2: number): Coordinate {
+    findIntersection(lat1: number, lng1: number, angle1: number, slope1: number, lat2: number, lng2: number, angle2: number, slope2: number): Coordinate {
         if (angle1 % Math.PI === 0) {
             return {
                 latitude: lat2,
@@ -87,9 +90,6 @@ export default class MarkersCalculator {
                 longitude: lng2
             }
         }
-
-        let slope1 = Math.tan(angle1)
-        let slope2 = Math.tan(angle2)
 
         let yIntercept1 = lat1 - (slope1 * lng1)
         let yIntercept2 = lat2 - (slope2 * lng2)

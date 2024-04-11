@@ -11,8 +11,9 @@ const coordinates = [
     {latitude: 0.1, longitude: 0.1},
     {latitude: 0.1, longitude: 0.2},
     {latitude: 0, longitude: 0.3},
-    {latitude: 0.1, longitude: 0.4},
-    {latitude: 0.09, longitude: 0.5}
+    {latitude: -0.2, longitude: 0.4},
+    {latitude: -0.2, longitude: 0.5},
+    {latitude: 0, longitude: 0.5}
 ];
 
 export default function Map() {
@@ -26,15 +27,17 @@ export default function Map() {
         ...topIntercept.map<LatLngExpression>(t => [t.latitude, t.longitude]),
         ...bottomIntercept.map<LatLngExpression>(b => [b.latitude, b.longitude]).reverse()
     ]
+    console.log(topIntercept)
+    console.log(bottomIntercept)
 
     return (
         <MapContainer style={{width: 700, height: 700}} center={[0, 0]} zoom={10} scrollWheelZoom={false}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {top.map((c, index) => (<Marker key={'t-'+index} position={[c.latitude, c.longitude]} title="top"><Popup>Top</Popup></Marker>))}
-            {coordinates.map((c, index) => (<Marker key={'o-'+index} position={[c.latitude, c.longitude]} title="original" ><Popup>Original</Popup></Marker>))}
-            {bottom.map((c, index) => (<Marker key={'b-'+index} position={[c.latitude, c.longitude]} title="bottom" ><Popup>bottom</Popup></Marker>))}
+            {/*top.map((c, index) => (<Marker key={'t-'+index} position={[c.latitude, c.longitude]} title="top"><Popup>Top</Popup></Marker>))*/}
+            {/*coordinates.map((c, index) => (<Marker key={'o-'+index} position={[c.latitude, c.longitude]} title="original" ><Popup>Original</Popup></Marker>))*/}
+            {/*bottom.map((c, index) => (<Marker key={'b-'+index} position={[c.latitude, c.longitude]} title="bottom" ><Popup>bottom</Popup></Marker>))*/}
             <Polyline  positions={topLine} pathOptions={{color: 'red'}} />
             <Polyline positions={origLine} pathOptions={{color: 'blue'}} />
             <Polyline positions={bottomLine} pathOptions={{color: 'yellow'}} />
