@@ -1,9 +1,8 @@
 import { MapContainer } from 'react-leaflet/MapContainer'
 import { TileLayer } from 'react-leaflet/TileLayer'
-import { Marker } from 'react-leaflet/Marker';
 import MarkersCalculator from "../Service/MarkersCalculator";
 import 'leaflet/dist/leaflet.css'
-import { Polygon, Polyline, Popup } from 'react-leaflet';
+import { Polygon, Polyline} from 'react-leaflet';
 import { LatLngExpression } from 'leaflet';
 
 const coordinates = [
@@ -31,7 +30,7 @@ export default function Map() {
     console.log(bottomIntercept)
 
     return (
-        <MapContainer style={{width: 700, height: 700}} center={[0, 0]} zoom={10} scrollWheelZoom={false}>
+        <MapContainer style={{width: 700, height: 700}} center={[0, 0]} zoom={10} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
